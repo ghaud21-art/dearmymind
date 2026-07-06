@@ -217,12 +217,17 @@ tailwind.config = {
       <div class="flex items-center gap-2">
         <span class="text-xl">🌿</span>
         <span class="font-bold text-sm sm:text-base">Dear My Mind</span>
-        <span id="todayLabel" class="text-xs text-sage-400 ml-1"></span>
       </div>
       <div class="flex items-center gap-1">
         <button id="settingsBtn" class="p-2 rounded-lg hover:bg-sage-100 text-sage-500 text-sm" title="설정">⚙️</button>
         <button id="logoutBtn" class="p-2 rounded-lg hover:bg-sage-100 text-sage-500 text-sm" title="로그아웃">↩︎</button>
       </div>
+    </div>
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 flex items-center justify-center gap-2 pb-2">
+      <button id="datePrevBtn" class="w-7 h-7 rounded-lg border acc-card-border hover:acc-light-bg text-sage-600 text-xs">‹</button>
+      <span id="viewDateLabel" class="text-xs font-semibold text-sage-600 min-w-[110px] text-center"></span>
+      <button id="dateNextBtn" class="w-7 h-7 rounded-lg border acc-card-border hover:acc-light-bg text-sage-600 text-xs">›</button>
+      <button id="dateTodayBtn" class="hidden text-[11px] acc-text underline underline-offset-2 ml-1">오늘로</button>
     </div>
     <nav class="max-w-5xl mx-auto px-4 sm:px-6 flex gap-1 overflow-x-auto pb-2">
       <button data-tab="daily" class="tab-btn active-tab">📝 오늘의 기록</button>
@@ -259,7 +264,7 @@ tailwind.config = {
       </div>
 
       <div class="bg-white rounded-2xl shadow-soft border acc-card-border p-5">
-        <h3 class="font-bold text-sm mb-4">오늘 기분은 어떤가요?</h3>
+        <h3 class="font-bold text-sm mb-4">기분은 어떤가요?</h3>
         <div id="moodButtons" class="grid grid-cols-5 gap-2 mb-4"></div>
         <label class="block text-xs font-semibold text-sage-600 mb-1.5">활력</label>
         <div id="energyPills" class="grid grid-cols-3 gap-2 mb-4"></div>
@@ -288,7 +293,7 @@ tailwind.config = {
 
       <div class="bg-white rounded-2xl shadow-soft border acc-card-border p-5">
         <h3 class="font-bold text-sm mb-2 flex items-center justify-between">
-          <span>오늘의 감사</span>
+          <span>감사</span>
           <span id="gratitudeSaveState" class="text-[11px] text-sage-400 font-normal"></span>
         </h3>
         <div class="flex flex-wrap gap-1.5 mb-2">
@@ -304,7 +309,7 @@ tailwind.config = {
 
       <div class="bg-white rounded-2xl shadow-soft border acc-card-border p-5">
         <h3 class="font-bold text-sm mb-2 flex items-center justify-between">
-          <span>오늘 하루 노트</span>
+          <span>하루 노트</span>
           <span id="diarySaveState" class="text-[11px] text-sage-400 font-normal"></span>
         </h3>
         <div class="flex flex-wrap gap-1.5 mb-2">
@@ -329,7 +334,7 @@ tailwind.config = {
     <section id="panel-tasks" class="tab-panel hidden space-y-4">
       <div class="bg-white rounded-2xl shadow-soft border acc-card-border p-5">
         <div class="flex items-center justify-between mb-3">
-          <h3 class="font-bold text-sm">오늘 할 일</h3>
+          <h3 class="font-bold text-sm">할 일</h3>
           <span id="taskRateLabel" class="text-[11px] text-sage-400">달성률 0%</span>
         </div>
         <div class="flex flex-wrap gap-2 mb-3">
@@ -365,13 +370,14 @@ tailwind.config = {
         <button data-subtab="taskstats" class="subtab-btn">✅ 할일달성률</button>
         <button data-subtab="routinestats" class="subtab-btn">💪 루틴달성률</button>
         <button data-subtab="gratitude" class="subtab-btn">🍀 감사모아보기</button>
+        <button data-subtab="myaffirms" class="subtab-btn">✍️ 내 확언 모아보기</button>
         <button data-subtab="affirmsettings" class="subtab-btn">✨ 확언설정</button>
         <button data-subtab="theme" class="subtab-btn">🎨 테마</button>
       </div>
 
       <div id="subpanel-ai" class="subtab-panel space-y-4">
         <div class="bg-white rounded-2xl shadow-soft border acc-card-border p-5">
-          <h3 class="font-bold text-sm mb-3">오늘 일기 AI 분석</h3>
+          <h3 class="font-bold text-sm mb-3">일기 AI 분석</h3>
           <p class="text-xs text-sage-400 mb-3">'오늘의 기록' 탭에서 일기 작성 후 "일기 분석" 버튼을 누르면 결과가 여기에도 표시돼요.</p>
           <div id="analysisEmpty" class="analysis-empty-msg text-xs text-sage-400 text-center py-8">아직 분석 결과가 없어요.</div>
           <div id="analysisResult" class="analysis-result-box hidden space-y-4 scroll-box"></div>
@@ -385,10 +391,11 @@ tailwind.config = {
 
       <div id="subpanel-distortion" class="subtab-panel hidden space-y-4">
         <div class="bg-white rounded-2xl shadow-soft border acc-card-border p-5">
-          <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center justify-between mb-1">
             <h3 class="font-bold text-sm">자주 보이는 생각 패턴</h3>
             <button id="distortionFeedbackBtn" class="acc-bg text-xs font-semibold px-3 py-1.5 rounded-lg">패턴 짚어보기</button>
           </div>
+          <p id="distortionLastDate" class="text-[11px] text-sage-400 mb-3"></p>
           <div id="distortionBadges" class="flex flex-wrap gap-1.5 mb-4"></div>
           <div id="distortionFeedbackBox" class="hidden acc-light-bg border acc-card-border rounded-xl p-3.5 mb-4 text-[12.5px] text-sage-700 leading-relaxed"></div>
           <div id="distortionList" class="space-y-2 scroll-box"></div>
@@ -446,6 +453,21 @@ tailwind.config = {
           </div>
           <div id="gratitudeCollection" class="space-y-2 scroll-box"></div>
           <p id="gratitudeEmpty" class="hidden text-xs text-sage-400 text-center py-8">이번 달 감사 기록이 아직 없어요.</p>
+        </div>
+      </div>
+
+      <div id="subpanel-myaffirms" class="subtab-panel hidden space-y-4">
+        <div class="bg-white rounded-2xl shadow-soft border acc-card-border p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <button id="myAffirmMonthPrevBtn" class="w-7 h-7 rounded-lg border acc-card-border hover:acc-light-bg text-sage-600 text-xs">‹</button>
+              <h3 class="font-bold text-sm" id="myAffirmMonthLabel">이번 달</h3>
+              <button id="myAffirmMonthNextBtn" class="w-7 h-7 rounded-lg border acc-card-border hover:acc-light-bg text-sage-600 text-xs">›</button>
+            </div>
+          </div>
+          <p class="text-xs text-sage-400 mb-3">전광판에 저장했던 나만의 확언들을 날짜별로 모아봤어요.</p>
+          <div id="myAffirmCollection" class="space-y-2 scroll-box"></div>
+          <p id="myAffirmEmpty" class="hidden text-xs text-sage-400 text-center py-8">이번 달에 저장한 확언이 아직 없어요.</p>
         </div>
       </div>
 
@@ -559,7 +581,21 @@ function setBtnLoading(btn, loading, loadingText){
   if(loading){ btn.disabled = true; btn.dataset.origHtml = btn.innerHTML; btn.innerHTML = '<span class="spinner"></span><span>' + (loadingText||'처리 중...') + '</span>'; }
   else{ btn.disabled = false; if(btn.dataset.origHtml) btn.innerHTML = btn.dataset.origHtml; }
 }
-function todayStr(){ const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function ymd(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function todayStr(){ return ymd(new Date()); }
+
+/* ---- 날짜 이동(오늘의 기록 / 할일&루틴에서 다른 날짜 보기·미리 등록하기) ---- */
+let viewDate = new Date();
+function viewDateStr(){ return ymd(viewDate); }
+function renderViewDateLabel(){
+  const isToday = viewDateStr() === todayStr();
+  document.getElementById('viewDateLabel').textContent = viewDateStr() + (isToday ? ' (오늘)' : '');
+  document.getElementById('dateTodayBtn').classList.toggle('hidden', isToday);
+}
+function changeViewDate(deltaDays){
+  const d = new Date(viewDate); d.setDate(d.getDate() + deltaDays);
+  viewDate = d; renderViewDateLabel(); loadDashboard();
+}
 function debounce(fn, wait){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), wait); }; }
 function extractSheetId(input){ input = String(input || '').trim(); const m = input.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/); return m ? m[1] : input; }
 function shuffleArray(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -630,6 +666,9 @@ document.getElementById('qu_resetBtn').addEventListener('click', ()=>{
   if(confirm('이 기기에 저장된 연동 정보를 삭제할까요?\n(구글 시트의 실제 데이터는 삭제되지 않으며, 다른 기기에서 아이디/비밀번호로 다시 로그인할 수 있어요)')){ AccountStore.clear(); showAuthScreen(); }
 });
 document.getElementById('logoutBtn').addEventListener('click', ()=>{ SessionStore.end(); showAuthScreen(); });
+document.getElementById('datePrevBtn').addEventListener('click', ()=>changeViewDate(-1));
+document.getElementById('dateNextBtn').addEventListener('click', ()=>changeViewDate(1));
+document.getElementById('dateTodayBtn').addEventListener('click', ()=>{ viewDate = new Date(); renderViewDateLabel(); loadDashboard(); });
 document.querySelectorAll('.auth-tab-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.auth-tab-btn').forEach(b=>b.classList.remove('active-authtab'));
@@ -661,12 +700,12 @@ let sleepHoursValue = 0;
 let affirmLibraryCache = null;
 
 async function loadDashboard(){
-  document.getElementById('todayLabel').textContent = todayStr();
+  renderViewDateLabel();
   document.getElementById('dashSkeleton').classList.remove('hidden');
   document.querySelectorAll('.tab-panel').forEach(p=>p.style.visibility='hidden');
   try{
     const sheetId = currentAccount.sheetId;
-    currentData = await callGAS('getData', [sheetId, todayStr()]);
+    currentData = await callGAS('getData', [sheetId, viewDateStr()]);
     renderAffirm(currentData.daily, currentData.tpl.affirm || []);
     renderMoodEnergy(currentData.daily);
     renderSleep(currentData.daily);
@@ -693,7 +732,7 @@ function renderAffirm(daily, tplList){
 }
 document.getElementById('affirmSaveBtn').addEventListener('click', async ()=>{
   const val = document.getElementById('affirmInput').value.trim();
-  try{ await callGAS('saveDaily', [currentAccount.sheetId, todayStr(), 'affirm', val]); setTickerText(val || '확언을 등록하고 따라 적어보세요'); showToast('저장됐어요.'); }
+  try{ await callGAS('saveDaily', [currentAccount.sheetId, viewDateStr(), 'affirm', val]); setTickerText(val || '확언을 등록하고 따라 적어보세요'); showToast('저장됐어요.'); }
   catch(err){ showToast('저장 실패: ' + err.message, true); }
 });
 document.getElementById('affirmManageLink').addEventListener('click', ()=>{
@@ -787,7 +826,7 @@ document.getElementById('diarySaveBtn').addEventListener('click', async ()=>{
 });
 
 async function saveDailyField(field, value){
-  try{ await callGAS('saveDaily', [currentAccount.sheetId, todayStr(), field, value]); }
+  try{ await callGAS('saveDaily', [currentAccount.sheetId, viewDateStr(), field, value]); }
   catch(err){ showToast('저장 실패: ' + err.message, true); }
 }
 
@@ -802,7 +841,7 @@ document.getElementById('daySummaryBtn').addEventListener('click', async ()=>{
   const btn = document.getElementById('daySummaryBtn');
   setBtnLoading(btn, true, '작성 중...');
   try{
-    const r = await callGAS('generateDaySummary', [currentAccount.sheetId, todayStr(), currentAccount.geminiKey]);
+    const r = await callGAS('generateDaySummary', [currentAccount.sheetId, viewDateStr(), currentAccount.geminiKey]);
     renderDaySummaryBox(r.praise, r.advice);
     showToast('하루 종합이 완료됐어요.');
   }catch(err){ showToast('실패: ' + err.message, true); }
@@ -825,13 +864,13 @@ function renderTasks(tasks){
   const sheetId = currentAccount.sheetId;
   list.querySelectorAll('.task-check').forEach(cb=>{
     cb.addEventListener('change', async ()=>{
-      try{ await callGAS('updateItem', [sheetId, cb.dataset.id, { done: cb.checked }]); currentData = await callGAS('getData',[sheetId, todayStr()]); renderTasks(currentData.items.task||[]); }
+      try{ await callGAS('updateItem', [sheetId, cb.dataset.id, { done: cb.checked }]); currentData = await callGAS('getData',[sheetId, viewDateStr()]); renderTasks(currentData.items.task||[]); }
       catch(err){ showToast('업데이트 실패: '+err.message, true); }
     });
   });
   list.querySelectorAll('.task-del').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
-      try{ await callGAS('deleteItem', [sheetId, btn.dataset.id]); currentData = await callGAS('getData',[sheetId, todayStr()]); renderTasks(currentData.items.task||[]); }
+      try{ await callGAS('deleteItem', [sheetId, btn.dataset.id]); currentData = await callGAS('getData',[sheetId, viewDateStr()]); renderTasks(currentData.items.task||[]); }
       catch(err){ showToast('삭제 실패: '+err.message, true); }
     });
   });
@@ -844,8 +883,8 @@ async function addTask(){
   const memo = memoInput.value.trim(); input.value = ''; memoInput.value = '';
   try{
     const sheetId = currentAccount.sheetId;
-    await callGAS('addItem', [sheetId, todayStr(), 'task', { text, f1: memo }]);
-    currentData = await callGAS('getData', [sheetId, todayStr()]);
+    await callGAS('addItem', [sheetId, viewDateStr(), 'task', { text, f1: memo }]);
+    currentData = await callGAS('getData', [sheetId, viewDateStr()]);
     renderTasks(currentData.items.task || []);
   }catch(err){ showToast('추가 실패: '+err.message, true); }
 }
@@ -868,18 +907,18 @@ function renderRoutines(templates, checks){
     </li>`;
   }).join('');
   const sheetId = currentAccount.sheetId;
-  const refresh = async ()=>{ currentData = await callGAS('getData',[sheetId, todayStr()]); renderRoutines(currentData.tpl.routine||[], currentData.chk.routine||{}); };
+  const refresh = async ()=>{ currentData = await callGAS('getData',[sheetId, viewDateStr()]); renderRoutines(currentData.tpl.routine||[], currentData.chk.routine||{}); };
   list.querySelectorAll('.routine-check').forEach(cb=>{
     cb.addEventListener('change', async ()=>{
       const minInput = list.querySelector(`.routine-min[data-id="${cb.dataset.id}"]`);
-      try{ await callGAS('setCheck', [sheetId, 'routinechk', todayStr(), cb.dataset.id, cb.checked, minInput.value||'']); await refresh(); }
+      try{ await callGAS('setCheck', [sheetId, 'routinechk', viewDateStr(), cb.dataset.id, cb.checked, minInput.value||'']); await refresh(); }
       catch(err){ showToast('체크 실패: '+err.message, true); }
     });
   });
   list.querySelectorAll('.routine-min').forEach(inp=>{
     inp.addEventListener('change', debounce(async ()=>{
       const cb = list.querySelector(`.routine-check[data-id="${inp.dataset.id}"]`);
-      try{ await callGAS('setCheck', [sheetId, 'routinechk', todayStr(), inp.dataset.id, cb.checked, inp.value||'']); }
+      try{ await callGAS('setCheck', [sheetId, 'routinechk', viewDateStr(), inp.dataset.id, cb.checked, inp.value||'']); }
       catch(err){ showToast('저장 실패: '+err.message, true); }
     }, 600));
   });
@@ -899,7 +938,7 @@ async function addRoutine(){
   try{
     const sheetId = currentAccount.sheetId;
     await callGAS('addItem', [sheetId, 'TPL', 'routine', { text, f1: isExercise ? 'exercise' : '' }]);
-    currentData = await callGAS('getData', [sheetId, todayStr()]);
+    currentData = await callGAS('getData', [sheetId, viewDateStr()]);
     renderRoutines(currentData.tpl.routine || [], currentData.chk.routine || {});
   }catch(err){ showToast('추가 실패: '+err.message, true); }
 }
@@ -921,7 +960,7 @@ document.querySelectorAll('.subtab-btn').forEach(btn=>{
     document.getElementById('subpanel-' + btn.dataset.subtab).classList.remove('hidden');
     const loaders = {
       ai: loadDaySummaryHistory, distortion: loadDistortions, moodsleep: loadMoodSleepReport, taskstats: ()=>loadTaskMonthlyStats(),
-      routinestats: ()=>loadRoutineMonthlyStats(), gratitude: ()=>loadGratitudeCollection(), affirmsettings: loadAffirmSettings, theme: renderThemeSwatches
+      routinestats: ()=>loadRoutineMonthlyStats(), gratitude: ()=>loadGratitudeCollection(), myaffirms: ()=>loadMyAffirms(), affirmsettings: loadAffirmSettings, theme: renderThemeSwatches
     };
     if(loaders[btn.dataset.subtab]) loaders[btn.dataset.subtab]();
   });
@@ -929,14 +968,14 @@ document.querySelectorAll('.subtab-btn').forEach(btn=>{
 
 /* ---------- 9) 리포트 ---------- */
 async function loadExistingAnalysis(){
-  try{ const text = await callGAS('getAnalysis', [currentAccount.sheetId, todayStr()]); if(text) renderAnalysis(JSON.parse(text)); }
+  try{ const text = await callGAS('getAnalysis', [currentAccount.sheetId, viewDateStr()]); if(text) renderAnalysis(JSON.parse(text)); }
   catch(e){ /* 없으면 무시 */ }
 }
 document.getElementById('analyzeBtn').addEventListener('click', async ()=>{
   const btn = document.getElementById('analyzeBtn');
   setBtnLoading(btn, true, '분석 중...');
   try{
-    const result = await callGAS('analyzeDiary', [currentAccount.sheetId, todayStr(), currentAccount.geminiKey]);
+    const result = await callGAS('analyzeDiary', [currentAccount.sheetId, viewDateStr(), currentAccount.geminiKey]);
     if(result && result.error){ showToast(result.error, true); }
     else{ renderAnalysis(result); showToast('분석이 완료됐어요.'); }
   }catch(err){ showToast('분석 실패: ' + err.message, true); }
@@ -991,6 +1030,7 @@ async function loadDistortions(){
         <p class="text-[12px] text-sage-500 italic">"${escapeHtml(d.evidence)}"</p></div>`).join('');
     }
     const cached = await callGAS('getDistortionFeedback', [currentAccount.sheetId]);
+    updateDistortionCooldownUI(cached);
     if(cached){ renderDistortionFeedback(cached); }
   }catch(err){ showToast('불러오기 실패: ' + err.message, true); }
 }
@@ -998,12 +1038,30 @@ function renderDistortionFeedback(fb){
   const box = document.getElementById('distortionFeedbackBox'); box.classList.remove('hidden');
   box.innerHTML = `<p class="mb-2">${escapeHtml(fb.patterns||'')}</p><ul class="list-disc pl-4 space-y-1">${(fb.tips||[]).map(t=>`<li>${escapeHtml(t)}</li>`).join('')}</ul>`;
 }
+// 너무 자주 리포트를 받지 않도록 마지막 리포트 날짜 기준 7일 쿨다운을 둔다.
+const DISTORTION_COOLDOWN_DAYS = 7;
+function addDaysStr(dateStr, days){ const d = new Date(dateStr + 'T00:00:00'); d.setDate(d.getDate() + days); return ymd(d); }
+function updateDistortionCooldownUI(cached){
+  const btn = document.getElementById('distortionFeedbackBtn');
+  const label = document.getElementById('distortionLastDate');
+  if(!cached || !cached.date){
+    label.textContent = '아직 리포트를 받은 적이 없어요.';
+    btn.disabled = false; btn.classList.remove('opacity-40','cursor-not-allowed');
+    return;
+  }
+  const nextAvailable = addDaysStr(cached.date, DISTORTION_COOLDOWN_DAYS);
+  const canRequest = todayStr() >= nextAvailable;
+  label.textContent = '마지막 리포트: ' + cached.date + (canRequest ? '' : ' · 다음 리포트는 ' + nextAvailable + '부터 가능해요');
+  btn.disabled = !canRequest;
+  btn.classList.toggle('opacity-40', !canRequest);
+  btn.classList.toggle('cursor-not-allowed', !canRequest);
+}
 document.getElementById('distortionFeedbackBtn').addEventListener('click', async ()=>{
   const btn = document.getElementById('distortionFeedbackBtn');
   setBtnLoading(btn, true, '분석 중...');
   try{
     const fb = await callGAS('requestDistortionFeedback', [currentAccount.sheetId, currentAccount.geminiKey]);
-    if(fb && fb.error){ showToast(fb.error, true); } else { renderDistortionFeedback(fb); }
+    if(fb && fb.error){ showToast(fb.error, true); } else { renderDistortionFeedback(fb); updateDistortionCooldownUI(fb); }
   }catch(err){ showToast('실패: ' + err.message, true); }
   finally{ setBtnLoading(btn, false); }
 });
@@ -1072,6 +1130,21 @@ async function loadGratitudeCollection(){
 }
 document.getElementById('gratitudeMonthPrevBtn').addEventListener('click', ()=>{ gratitudeDate = new Date(gratitudeDate.getFullYear(), gratitudeDate.getMonth()-1, 1); loadGratitudeCollection(); });
 document.getElementById('gratitudeMonthNextBtn').addEventListener('click', ()=>{ gratitudeDate = new Date(gratitudeDate.getFullYear(), gratitudeDate.getMonth()+1, 1); loadGratitudeCollection(); });
+
+/* ---- 내가 작성한 확언 모아보기 ---- */
+let myAffirmDate = new Date();
+async function loadMyAffirms(){
+  try{
+    document.getElementById('myAffirmMonthLabel').textContent = monthLabel(myAffirmDate);
+    const list = await callGAS('getAffirmHistory', [currentAccount.sheetId, myAffirmDate.getFullYear(), myAffirmDate.getMonth()+1]);
+    const wrap = document.getElementById('myAffirmCollection'); const empty = document.getElementById('myAffirmEmpty');
+    if(!list.length){ wrap.innerHTML=''; empty.classList.remove('hidden'); return; }
+    empty.classList.add('hidden');
+    wrap.innerHTML = list.map(a=>`<div class="border acc-card-border rounded-xl p-3 acc-light-bg"><p class="text-[11px] text-sage-400 mb-1">${a.day}일</p><p class="text-[12.5px] text-sage-700 whitespace-pre-line">✨ ${escapeHtml(a.affirm)}</p></div>`).join('');
+  }catch(err){ showToast('불러오기 실패: ' + err.message, true); }
+}
+document.getElementById('myAffirmMonthPrevBtn').addEventListener('click', ()=>{ myAffirmDate = new Date(myAffirmDate.getFullYear(), myAffirmDate.getMonth()-1, 1); loadMyAffirms(); });
+document.getElementById('myAffirmMonthNextBtn').addEventListener('click', ()=>{ myAffirmDate = new Date(myAffirmDate.getFullYear(), myAffirmDate.getMonth()+1, 1); loadMyAffirms(); });
 
 /* ---- 확언 목록 설정 + 라이브러리 추천 ---- */
 async function loadAffirmSettings(){
