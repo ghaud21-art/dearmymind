@@ -514,6 +514,23 @@ tailwind.config = {
     <h3 class="font-bold text-base mb-4">연동 설정</h3>
     <p class="text-xs text-sage-500 mb-1">아이디</p>
     <p id="set_username" class="text-sm font-medium mb-4"></p>
+
+    <p class="text-xs text-sage-500 mb-1">Gemini API 키</p>
+    <div class="flex items-center justify-between mb-1">
+      <p id="set_geminiMasked" class="text-sm font-medium"></p>
+      <button id="set_editGeminiBtn" class="text-[11px] acc-text underline underline-offset-2">변경</button>
+    </div>
+    <div id="set_geminiEditBox" class="hidden mt-2 mb-4 space-y-2 acc-light-bg border acc-card-border rounded-xl p-3">
+      <input id="set_newGeminiKey" type="password" placeholder="새 Gemini API 키" class="w-full border acc-card-border rounded-lg px-3 py-2 text-sm acc-focus">
+      <input id="set_confirmPassword" type="password" placeholder="현재 비밀번호 확인" class="w-full border acc-card-border rounded-lg px-3 py-2 text-sm acc-focus">
+      <p id="set_geminiError" class="hidden text-xs text-red-500"></p>
+      <div class="flex gap-2">
+        <button id="set_saveGeminiBtn" class="flex-1 acc-bg text-xs font-semibold py-2 rounded-lg">저장</button>
+        <button id="set_cancelGeminiBtn" class="flex-1 bg-sage-100 hover:bg-sage-200 text-sage-700 text-xs font-semibold py-2 rounded-lg">취소</button>
+      </div>
+    </div>
+    <div class="mb-2"></div>
+
     <button id="set_closeBtn" class="w-full bg-sage-100 hover:bg-sage-200 text-sage-700 font-semibold rounded-xl py-2 text-sm mb-2">닫기</button>
     <button id="set_unlinkBtn" class="w-full bg-red-50 hover:bg-red-100 text-red-500 font-semibold rounded-xl py-2 text-sm">이 기기에서 연동 해제</button>
   </div>
@@ -677,8 +694,18 @@ document.querySelectorAll('.auth-tab-btn').forEach(btn=>{
     document.getElementById(btn.dataset.authtab === 'signup' ? 'signupForm' : 'serverLoginForm').classList.remove('hidden');
   });
 });
+function maskGeminiKey(key){
+  if(!key) return '설정 안 됨';
+  if(key.length <= 8) return '••••••••';
+  return key.slice(0, 4) + '••••••••' + key.slice(-4);
+}
 document.getElementById('settingsBtn').addEventListener('click', ()=>{
   document.getElementById('set_username').textContent = currentAccount?.username || '-';
+  document.getElementById('set_geminiMasked').textContent = maskGeminiKey(currentAccount?.geminiKey);
+  document.getElementById('set_geminiEditBox').classList.add('hidden');
+  document.getElementById('set_newGeminiKey').value = '';
+  document.getElementById('set_confirmPassword').value = '';
+  document.getElementById('set_geminiError').classList.add('hidden');
   document.getElementById('settingsModal').classList.remove('hidden');
 });
 document.getElementById('set_closeBtn').addEventListener('click', ()=>{ document.getElementById('settingsModal').classList.add('hidden'); });
@@ -686,6 +713,30 @@ document.getElementById('set_unlinkBtn').addEventListener('click', ()=>{
   if(confirm('이 기기에서 연동을 해제할까요? 아이디/비밀번호만 있으면 언제든 다시 로그인할 수 있어요.')){
     AccountStore.clear(); document.getElementById('settingsModal').classList.add('hidden'); showAuthScreen();
   }
+});
+document.getElementById('set_editGeminiBtn').addEventListener('click', ()=>{
+  document.getElementById('set_geminiEditBox').classList.remove('hidden');
+});
+document.getElementById('set_cancelGeminiBtn').addEventListener('click', ()=>{
+  document.getElementById('set_geminiEditBox').classList.add('hidden');
+});
+document.getElementById('set_saveGeminiBtn').addEventListener('click', async ()=>{
+  const errEl = document.getElementById('set_geminiError'); errEl.classList.add('hidden');
+  const newKey = document.getElementById('set_newGeminiKey').value.trim();
+  const password = document.getElementById('set_confirmPassword').value;
+  if(!newKey || !password){ errEl.textContent = '새 키와 비밀번호를 모두 입력해주세요.'; errEl.classList.remove('hidden'); return; }
+  const btn = document.getElementById('set_saveGeminiBtn');
+  setBtnLoading(btn, true, '저장 중...');
+  try{
+    const result = await callGAS('updateGeminiKey', [currentAccount.username, password, newKey]);
+    if(result && result.error) throw new Error(result.error);
+    currentAccount.geminiKey = result.geminiKey;
+    AccountStore.save(currentAccount);
+    document.getElementById('set_geminiMasked').textContent = maskGeminiKey(currentAccount.geminiKey);
+    document.getElementById('set_geminiEditBox').classList.add('hidden');
+    showToast('Gemini 키가 변경됐어요.');
+  }catch(err){ errEl.textContent = err.message; errEl.classList.remove('hidden'); }
+  finally{ setBtnLoading(btn, false); }
 });
 
 /* ---------- 7) 대시보드 데이터 로드 & 렌더 ---------- */
